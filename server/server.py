@@ -46,6 +46,17 @@ def clientUpload(c) :
       file.write(text)
       n += 1024
    file.close()
+
+def close(c) :
+   c.close()
+
+def returnFiles(c) :
+   fileNames = str(os.listdir())
+   c.sendall(bytes(fileNames, "utf-8"))
+
+
+
+
 # next create a socket object 
 s = socket.socket()          
 print ("Socket successfully created")
@@ -78,11 +89,19 @@ while True:
    # send a thank you message to the client.  
    c.sendall(bytes('Connection established.', 'utf-8'))
    #Receive command type from client, tells us what method to run
-   command = (c.recv(1024)).decode('utf-8')
-   #Assume it's d
-   if(command == "d") :
-      clientDownload(c)
+   while(True) :
+      command = (c.recv(1024)).decode('utf-8')
+      if(command == "d") :
+         clientDownload(c)
+      elif(command == "c") :
+         close(c)
+         break
+      elif(command == "u") :
+         clientUpload(c)
+      elif(command == "s") :
+         returnFiles(c)
+      else :
+         print("How did this happen?")
   
    # Close the connection with the client 
-   c.close() 
    exit()
