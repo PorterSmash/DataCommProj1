@@ -1,7 +1,7 @@
-# Import socket module 
+# Import socket module
 import socket
 #Ability to look at files in directory
-import os	
+import os
 
 #Returns length of file in bytes when encoded in utf-8 (Default for VSCode which I use)
 #S param is socket in use
@@ -39,7 +39,7 @@ def download(s) :
 
 #This time we send a file to the server in chunks.
 #this is the opposite of what was occuring in the download
-#method. 
+#method.
 def upload(s) :
     #Send file name
     filename = input("Enter your filename: ")
@@ -47,7 +47,7 @@ def upload(s) :
 
     #Open file
     file = open(filename)
-    
+
     #these 3 lines use the os lib to get the size of the file
     #in bytes and  convert it as a string
     fsize = os.stat(filename)
@@ -70,8 +70,8 @@ def upload(s) :
     #Close the file
     file.close()
 
-# Create a socket object 
-s = socket.socket()		 
+# Create a socket object
+s = socket.socket()
 
 #Get initial connect command
 print("Use 'CONNECT <server name/IP address> <server port>' to connect")
@@ -84,29 +84,35 @@ command_parse = init_connection.split()
 port = int(command_parse[2])
 host = command_parse[1]
 
-# Define the port on which you want to connect 
-#port = 12345				
+# Define the port on which you want to connect
+#port = 12345
 
-# connect to the server on local computer 
-s.connect((host, port)) 
+# connect to the server on local computer
+s.connect((host, port))
 
 # receive data from the server
-# Get "Connection Established" 
+# Get "Connection Established"
 print( (s.recv(1024).decode('utf-8')))
 print("")
 
 #Next three lines set up initial interface
-internal_command = input("What do you want to do? ")
-internal_command_parse = internal_command.split()
-first_arg = internal_command_parse[0]
+while 1:
+    internal_command = input("\nWhat do you want to do? \n1. Download\n2. Quit\n")
+    internal_command_parse = internal_command.split()
+    first_arg = internal_command_parse[0]
 
-if(first_arg == "Download") :
-    #Notify server that I want to download
-    s.sendall(bytes("d", "utf-8"))
-    #Call download
-    download(s)
-
-# close the connection 
-s.close()
-
-
+    if(first_arg.lower() == "download" or first_arg == "1"):
+        #Notify server that I want to download
+        s.sendall(bytes("d", "utf-8"))
+        #Call download
+        download(s)
+    elif(first_arg.lower() == "quit" or first_arg == "2"):
+        #close the connection
+        s.close()
+        print("See you later.")
+        #break out of loop, end program
+        break
+    else:
+        print("     ERR: invalid input")
+        #loop again, ask for new input
+        continue
