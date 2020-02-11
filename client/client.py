@@ -113,26 +113,24 @@ print("")
 while 1 :
     first_arg = input("\nWhat do you want to do? \n1. STORE\n2. RETRIEVE\n3. LIST \n4. QUIT\n\nCommand: ")
 
-    if(first_arg.lower() == "retrieve" or first_arg == '2') :
+    if(first_arg.lower() == "store" or first_arg == '1'):
+        s.sendall(bytes("u", "utf-8"))
+        upload(s)
+    elif(first_arg.lower() == "retrieve" or first_arg == '2'):
         #Notify server that I want to download
         s.sendall(bytes("d", "utf-8"))
         #Call download
         download(s)
-    elif(first_arg.lower() == "store" or first_arg == '1') :
-        s.sendall(bytes("u", "utf-8"))
-        upload(s)
-    elif(first_arg.lower() == "quit" or first_arg == '4') :
+    elif(first_arg.lower() == "list" or first_arg == '3'):
+        s.sendall(bytes("s", "utf-8"))
+        listFiles(s)
+    elif(first_arg.lower() == "quit" or first_arg == '4'):
         #Both ends of the connection need to close
         s.sendall(bytes("c", "utf-8"))
         close(s)
         break
-    elif(first_arg.lower() == "list" or first_arg == '3'):
-        s.sendall(bytes("s", "utf-8"))
-        listFiles(s)
     else:
         print(" ERR: invalid input")
         #loop again, ask for new input
         continue
 print("Session Terminated.")
-
-
